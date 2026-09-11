@@ -40,9 +40,9 @@ window.onkeyup = (event: KeyboardEvent) => {
 
 };
 
-let xEnemySpeed: number = 10;
+let xEnemySpeed: number = 111;
 
-let ySpaceShipSpeed: number = 5;
+let ySpaceShipSpeed: number = 222;
 
 let ySpaceShip: number = 440;
 
@@ -54,10 +54,21 @@ let yDistance: number;
 
 let totalDistance: number;
 
-let enemySize: number = 300
+let enemySize: number = 300;
+
+let lastTime: number = Date.now();
+let deltaTime: number;
 
 // the animation loop. Installs a timeout-listener, that calls animate again after a given amount of milliseconds
 function animate(): void {
+
+    let currentTime: number = Date.now();
+    //console.log("currentTime: " + currentTime);
+    deltaTime = (currentTime - lastTime) / 1000;
+    //console.log("lastTime: " + lastTime);
+    //console.log("Die unglaublich gut ausgerechnete deltaTime: " + deltaTime);
+
+    lastTime = currentTime;
 
     drawBackground();
 
@@ -88,10 +99,11 @@ function animate(): void {
         youarelost();
     }
 
+    //bewegen
     //ySpaceShip = ySpaceShip + ySpaceShipSpeed
-    ySpaceShip += ySpaceShipSpeed
+    ySpaceShip += ySpaceShipSpeed * deltaTime;
 
-    xEnemy -= xEnemySpeed
+    xEnemy -= xEnemySpeed * deltaTime;
 
     requestAnimationFrame(animate)
 }

@@ -27,16 +27,24 @@ window.onkeyup = (event) => {
         ySpaceShipSpeed = ySpaceShipSpeed * -1;
     }
 };
-let xEnemySpeed = 10;
-let ySpaceShipSpeed = 5;
+let xEnemySpeed = 111;
+let ySpaceShipSpeed = 222;
 let ySpaceShip = 440;
 let xEnemy = 980;
 let xDistance;
 let yDistance;
 let totalDistance;
 let enemySize = 300;
+let lastTime = Date.now();
+let deltaTime;
 // the animation loop. Installs a timeout-listener, that calls animate again after a given amount of milliseconds
 function animate() {
+    let currentTime = Date.now();
+    //console.log("currentTime: " + currentTime);
+    deltaTime = (currentTime - lastTime) / 1000;
+    //console.log("lastTime: " + lastTime);
+    //console.log("Die unglaublich gut ausgerechnete deltaTime: " + deltaTime);
+    lastTime = currentTime;
     drawBackground();
     drawSpaceShip();
     crc2.beginPath();
@@ -57,9 +65,10 @@ function animate() {
     if (ySpaceShip > 880) {
         youarelost();
     }
+    //bewegen
     //ySpaceShip = ySpaceShip + ySpaceShipSpeed
-    ySpaceShip += ySpaceShipSpeed;
-    xEnemy -= xEnemySpeed;
+    ySpaceShip += ySpaceShipSpeed * deltaTime;
+    xEnemy -= xEnemySpeed * deltaTime;
     requestAnimationFrame(animate);
 }
 function drawSpaceShip() {
