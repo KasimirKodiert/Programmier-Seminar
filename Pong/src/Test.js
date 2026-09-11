@@ -1,0 +1,132 @@
+"use strict";
+// listen to the load-event, indicating that the browser has finished loading, then call main
+window.addEventListener("load", main);
+// declare necessary variables
+let crc2;
+// main function
+function main(_event) {
+    createCanvas(990, 880);
+    drawBackground();
+    animate();
+}
+// create a canvas element, append it to the html-document and store the rendering-api as crc2
+function createCanvas(_width, _height) {
+    let canvas = document.createElement("canvas");
+    canvas.width = _width;
+    canvas.height = _height;
+    document.body.appendChild(canvas);
+    crc2 = canvas.getContext("2d");
+}
+// draw the background image
+function drawBackground() {
+    crc2.fillStyle = "black";
+    crc2.fillRect(0, 0, crc2.canvas.width, crc2.canvas.height);
+}
+window.onkeydown = (event) => {
+    if (event.key == "s") {
+        sPressed = true;
+    }
+    if (event.key == "x") {
+        xPressed = true;
+    }
+    if (event.key == "ArrowUp") {
+        upPressed = true;
+    }
+    if (event.key == "ArrowDown") {
+        downPressed = true;
+    }
+};
+window.onkeyup = (event) => {
+    if (event.key == "s") {
+        sPressed = false;
+    }
+    if (event.key == "x") {
+        xPressed = false;
+    }
+    if (event.key == "ArrowUp") {
+        upPressed = false;
+    }
+    if (event.key == " ") {
+        gameRunning = true;
+    }
+    if (event.key == "ArrowDown") {
+        downPressed = false;
+    }
+};
+let xBall = 495;
+let yBall = 440;
+let xBallSpeed = 10;
+let yBallSpeed = 5;
+let yBat = 440;
+let yBatSpeed = 10;
+let sPressed = false;
+let xPressed = false;
+let upPressed = false;
+let downPressed = false;
+let yBat2 = 440;
+let gameRunning = false;
+// the animation loop. Installs a timeout-listener, that calls animate again after a given amount of milliseconds
+function animate() {
+    drawBackground();
+    //Ball bewegen
+    if (gameRunning) {
+        xBall = xBall + xBallSpeed;
+        yBall = yBall + yBallSpeed;
+    }
+    //Linken Bat steuern
+    if (sPressed) {
+        yBat = yBat - yBatSpeed;
+    }
+    if (xPressed) {
+        yBat = yBat + yBatSpeed;
+    }
+    //rechterBat
+    if (upPressed) {
+        yBat2 = yBat2 - yBatSpeed;
+    }
+    if (downPressed) {
+        yBat2 = yBat2 + yBatSpeed;
+    }
+    //Bat zeichnen links
+    crc2.fillStyle = "blue";
+    crc2.fillRect(40, yBat, 20, 100);
+    crc2.fillStyle = "blue";
+    crc2.fillRect(930, yBat2, 20, 100);
+    //von linkem schläger abprallen
+    if (xBall < 60 && yBall > yBat && yBall < yBat + 100) {
+        xBallSpeed = xBallSpeed * -1;
+    }
+    if (xBall > 930 && yBall > yBat2 && yBall < yBat2 + 100) {
+        xBallSpeed = xBallSpeed * -1;
+    }
+    //Ball zeichnen
+    drawBall(xBall, yBall);
+    //Von Wänden abprallen
+    if (yBall > 880) {
+        yBallSpeed = yBallSpeed * -1;
+    }
+    if (xBall > 990) {
+        player2Lost();
+    }
+    if (yBall < 0) {
+        yBallSpeed = yBallSpeed * -1;
+    }
+    if (xBall < 0) {
+        player1Lost();
+    }
+    requestAnimationFrame(animate);
+}
+function drawBall(x, y) {
+    crc2.fillStyle = "blue";
+    crc2.beginPath();
+    crc2.arc(x, y, 15, 0, 2 * Math.PI);
+    crc2.fill();
+}
+function player1Lost() {
+    alert("spieler 1 hat verloren");
+    throw new Error("A player has lost");
+}
+function player2Lost() {
+    alert("spieler 2 hat verloren");
+    throw new Error("A player has lost");
+}
